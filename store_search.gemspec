@@ -7,9 +7,9 @@ Gem::Specification.new do |spec|
   spec.name          = "store_search"
   spec.version       = StoreSearch::VERSION
   spec.authors       = ["Leszek Zalewski"]
-  spec.email         = ["leszek.zalewski@zalesz.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.email         = ["leszek.zalewski@applift.com"]
+  spec.summary       = %q{Store Search API Client.}
+  spec.description   = %q{Client which connects to App/Play Store search API.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -20,4 +20,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec", "~> 2.14"
+  spec.add_development_dependency "webmock"
 end
