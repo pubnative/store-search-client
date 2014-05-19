@@ -1,6 +1,7 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'webmock/rspec'
+require_relative '../lib/store_search'
 
 RSpec.configure do |config|
   # Run specs in random order to surface order dependencies. If you find an
@@ -11,6 +12,7 @@ RSpec.configure do |config|
 
   config.before :each do
     WebMock.disable_net_connect! allow_localhost: true
+    StoreSearch.configuration = StoreSearch::Configuration.new
   end
 
   config.after :each do

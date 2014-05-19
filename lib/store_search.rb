@@ -16,3 +16,6 @@ end
 
 require "store_search/version"
 require "store_search/configuration"
+require "store_search/response"
+require "store_search/request"
+require "store_search/app"

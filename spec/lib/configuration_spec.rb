@@ -1,5 +1,4 @@
 require 'spec_helper'
-require_relative '../../lib/store_search/configuration'
 
 describe StoreSearch::Configuration do
   describe '#base_uri' do
