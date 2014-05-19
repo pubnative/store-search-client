@@ -30,6 +30,7 @@ mkmf.log
 .sass-cache
 /spec/tmp/*
 /cache
+/bin
 rerun.txt
 pickle-email-*.html
 
