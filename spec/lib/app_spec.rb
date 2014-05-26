@@ -41,15 +41,42 @@ describe StoreSearch::App do
     end
 
     context 'when app was found' do
-      let(:response) { build_response 200, %q|{"success":true,"app":{"title":"Spotify","description":"Music player","icon_url":"http://icon.url"}}| }
+      let(:results_hash) do
+        {
+          "title" => "Spotify",
+          "description" => "Music player",
+          "publisher" => "Spotify Ltd.",
+          "developer" => "Spotify Ltd.",
+          "version" => "1.0.1",
+          "memory" => "28.5 MB",
+          "release_date" => "2014-05-14 15:54:22",
+          "min_os_version" => "2.2+",
+          "age_rating" => "Everyone",
+          "rating" => "4.4",
+          "categories" => ["Music & Audio"],
+          "icon_url" => "http://icon.url",
+          "screenshot_urls" => ["http://screen.com/1","http://screen.com/2","http://screen.com/3"]
+        }
+      end
 
-      its(:fetch_basic_info!) { should be == {'title' => 'Spotify', 'description' => 'Music player', 'icon_url' => 'http://icon.url'}
- }
+      let(:response) { build_response 200, File.read(File.expand_path("../../fixtures/spotify.json", __FILE__)) }
+      its(:fetch_basic_info!) { should be == results_hash }
+
       context 'app details' do
         before { subject.fetch_basic_info! }
         its(:title) { should be == 'Spotify' }
         its(:description) { should be == 'Music player' }
         its(:icon_url) { should be == 'http://icon.url' }
+        its(:publisher) { should be == "Spotify Ltd." }
+        its(:developer) { should be == "Spotify Ltd." }
+        its(:version) { should be == "1.0.1" }
+        its(:memory) { should be == "28.5 MB" }
+        its(:release_date) { should be == "2014-05-14 15:54:22" }
+        its(:min_os_version) { should be == "2.2+" }
+        its(:age_rating) { should be == "Everyone" }
+        its(:rating) { should be == "4.4" }
+        its(:categories) { should match_array(["Music & Audio"]) }
+        its(:screenshot_urls) { should be == 1.upto(3).map { |i|"http://screen.com/#{i}"} }
       end
     end
 

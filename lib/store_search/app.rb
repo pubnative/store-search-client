@@ -5,7 +5,24 @@ module StoreSearch
     RequestError           = Class.new(StandardError)
     InvalidAttributesError = Class.new(ArgumentError)
 
-    attr_accessor :id, :platform_id, :title, :description, :icon_url, :errors
+    APPLICATION_FIELDS = %w[
+      title
+      description
+      publisher
+      developer
+      version
+      memory
+      release_date
+      min_os_version
+      age_rating
+      rating
+      categories
+      icon_url
+      screenshot_urls
+    ]
+
+    attr_accessor :id, :platform_id, :errors
+    attr_accessor *APPLICATION_FIELDS
 
     def initialize(id, platform_id)
       @id          = id
@@ -67,9 +84,9 @@ module StoreSearch
     private
 
     def assign_attributes(hash)
-      @title       = hash['title']
-      @description = hash['description']
-      @icon_url    = hash['icon_url']
+      APPLICATION_FIELDS.each do |field|
+        send "#{field}=", hash[field]
+      end
 
       hash
     end
