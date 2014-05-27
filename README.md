@@ -1,6 +1,6 @@
 # StoreSearch
 
-TODO: Write a gem description
+Client for accessing the StoreSearch::API.
 
 ## Installation
 
@@ -18,7 +18,33 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Configure client, i.e. rails initializer.
+
+```ruby
+StoreSearch.configure do |config|
+  config.username = 'apiusername'
+  config.password = 'apipassword'
+end
+```
+
+Fetch iOS Spotify details in German, use Switzerland and Austria app stores as fallbacks.
+
+```ruby
+app = StoreSearch::App.new '', 'ios'
+app.fetch_basic_info! country_code: 'DE', language_code: 'de', fallback_country_codes: %w[CH AT] # => {...}
+# => {...}
+app.title     # => Spotify
+app.developer # => Spotify Ltd.
+```
+
+Fetch android Spotify details in Spanish.
+
+```ruby
+app = StoreSearch::App.new('com.android.spotify', 'android')
+app.fetch_basic_info!(language_code: 'es') # => { ... }
+app.title     # => Spotify
+app.developer # => Spotify Ltd.
+```
 
 ## Contributing
 
