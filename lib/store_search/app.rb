@@ -32,14 +32,18 @@ module StoreSearch
 
     # Public: Makes an API call to grab the application details from app store, if the app is valid.
     #
-    # country_codes - an array of valid "ISO 3166-1 alpha-2" country_codes,
-    #                 which API will use as addition in search for the basic info.
+    # country_code           - valid "ISO 3166-1 alpha-2" store country code
+    # language_code          - valid language code, i.e. 'en', 'en_GB', 'es_MX', etc.
+    # fallback_country_codes - an array of valid "ISO 3166-1 alpha-2" country_codes,
+    #                          which API will use as fallback for search in store.
     #
     # Exaples
     #
     #   app = StoreSearch::App.new('com.android.spotify', :android)
-    #   app.fetch_basic_info!(%w[DE FR GB]) # => {'title' => 'Spotify', 'description' => '...', 'icon_url' => '...'}
-    #   app.title # => 'Spotify'
+    #   app.fetch_basic_info!(country_code: 'US', fallback_country_codes: %w[DE FR GB])
+    #   # => {'title' => 'Spotify', 'description' => '...', 'icon_url' => '...'}
+    #   app.title
+    #   # => 'Spotify'
     #
     #   app = StoreSearch::App.new('000000', :ios)
     #   app.fetch_basic_info! # => nil
@@ -48,10 +52,18 @@ module StoreSearch
     # Returns a hash with app details if app was found, nil otherwise.
     # Raises StoreSearch::App::InvalidAttributesError if application is invalid.
     # Raises StoreSearch::App::Returns if request failed.
-    def fetch_basic_info!(country_codes = [])
+    def fetch_basic_info!(country_code: 'US', language_code: 'en', fallback_country_codes: [])
       raise InvalidAttributesError, errors.join(', ') unless valid?
 
-      response = Request.new("apps/#{ platform_id }", id: id, country_codes: country_codes).get
+      response = Request.new(
+        "apps/#{ platform_id }",
+        {
+          id: id,
+          country_code:  country_code,
+          language_code: language_code,
+          fallback_country_codes: fallback_country_codes,
+        }
+      ).get
 
       case response.status
       when 200
