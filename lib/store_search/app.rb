@@ -1,6 +1,6 @@
 module StoreSearch
   class App
-    PLATFOMR_IDS = %w[ios android]
+    PLATFORM_IDS = %w[ios android]
 
     RequestError           = Class.new(StandardError)
     InvalidAttributesError = Class.new(ArgumentError)
@@ -19,6 +19,8 @@ module StoreSearch
       categories
       icon_url
       screenshot_urls
+      platforms
+      supported_devices
     ]
 
     attr_accessor :id, :platform_id, :errors
@@ -88,7 +90,7 @@ module StoreSearch
       @errors = []
 
       @errors << "missing app id"      if id.to_s.empty?
-      @errors << "unknown platform_id" unless PLATFOMR_IDS.include?(platform_id.to_s)
+      @errors << "unknown platform_id" unless PLATFORM_IDS.include?(platform_id.to_s)
 
       @errors.empty?
     end
