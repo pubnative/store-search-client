@@ -20,10 +20,19 @@ module StoreSearch
     #
     # Returns wrapped and parsed StoreSearch::Response object.
     def get
-      Response.new open(uri, http_options)
+      Response.new make_request
     end
 
     private
+
+    # Private: Try to make an request, but also handle http errors as regular response.
+    def make_request
+      begin
+        open(uri, http_options)
+      rescue OpenURI::HTTPError => error
+        error.io
+      end
+    end
 
     # Internal: Generates URI based on configured URI, given path and params.
     #

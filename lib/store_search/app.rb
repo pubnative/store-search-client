@@ -53,7 +53,7 @@ module StoreSearch
     #
     # Returns a hash with app details if app was found, nil otherwise.
     # Raises StoreSearch::App::InvalidAttributesError if application is invalid.
-    # Raises StoreSearch::App::Returns if request failed.
+    # Raises StoreSearch::App::RequestError if request failed.
     def fetch_basic_info!(country_code: 'US', language_code: 'en', fallback_country_codes: [])
       raise InvalidAttributesError, errors.join(', ') unless valid?
 
