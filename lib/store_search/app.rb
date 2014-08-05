@@ -21,6 +21,8 @@ module StoreSearch
       screenshot_urls
       platforms
       supported_devices
+      total_ratings
+      installs
     ]
 
     attr_accessor :id, :platform_id, :errors
