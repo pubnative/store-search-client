@@ -41,7 +41,7 @@ describe StoreSearch::Request do
 
         expect do
           expect(subject.get).to be_a StoreSearch::Response
-        end.to_not raise_error
+        end.to raise_error
 
         request.should have_been_requested
       end
@@ -54,7 +54,7 @@ describe StoreSearch::Request do
 
         expect do
           expect(subject.get).to be_a StoreSearch::Response
-        end.to_not raise_error
+        end.to raise_error
 
         request.should have_been_requested
       end

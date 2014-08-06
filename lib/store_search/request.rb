@@ -27,11 +27,9 @@ module StoreSearch
 
     # Private: Try to make an request, but also handle http errors as regular response.
     def make_request
-      begin
-        open(uri, http_options)
-      rescue OpenURI::HTTPError => error
-        error.io
-      end
+      open(uri, http_options)
+    rescue => error
+      raise error
     end
 
     # Internal: Generates URI based on configured URI, given path and params.
