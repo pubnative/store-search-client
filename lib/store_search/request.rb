@@ -4,12 +4,16 @@ require 'open-uri'
 
 module StoreSearch
   class Request
-    attr_accessor :path, :params, :uri
+    attr_accessor :platform_id, :params
 
-    def initialize(path, params = {})
-      @path = path
+    PLATFORMS = {
+      ios:  { search: AppStore },
+      android:  { search: PlayStore }
+    }
+
+    def initialize(platform_id, params = {})
+      @platform_id = platform_id.to_sym
       @params = params
-      @uri = generate_uri(path, params)
     end
 
     # Public: Make an actual API calls.
@@ -20,30 +24,15 @@ module StoreSearch
     #
     # Returns wrapped and parsed StoreSearch::Response object.
     def get
-      Response.new make_request
+      make_request
     end
 
     private
 
     # Private: Try to make an request, but also handle http errors as regular response.
     def make_request
-      open(uri, http_options)
-    rescue => error
-      raise error
-    end
-
-    # Internal: Generates URI based on configured URI, given path and params.
-    #
-    # Examples
-    #
-    #   generate_uri('apps/ios', id: '12341234', country_codes: %w[FR DE])
-    #     # => http://storesearch.applift.com/api/v1/apps/ios?id=12341234&country_codes[]=FR&country_codes[]=DE
-    #
-    # Returns builded Addressable::URI object.
-    def generate_uri(path, params)
-      Addressable::URI.join(StoreSearch.configuration.base_uri, path).tap do |base_uri|
-        base_uri.query = Rack::Utils.build_nested_query stringify_numbers_deep!(params.dup)
-      end
+      search = PLATFORMS[platform_id][:search]
+      search.fetch_app_details params[:id], params
     end
 
     # Fix for rack/utils issue: https://github.com/rack/rack/issues/557
@@ -52,12 +41,6 @@ module StoreSearch
         hash[key] = value.to_s         if value.kind_of?(Numeric)
         stringify_numbers_deep!(value) if value.kind_of?(Hash)
       end
-    end
-
-    def http_options
-      {
-        http_basic_authentication: [StoreSearch.configuration.username, StoreSearch.configuration.password]
-      }
     end
   end
 end

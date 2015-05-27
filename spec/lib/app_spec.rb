@@ -1,15 +1,6 @@
 require 'spec_helper'
 
 describe StoreSearch::App do
-  class HTTPResponse < Struct.new(:status, :read)
-    def self.build(status, body)
-      new [status.to_s, ''], body
-    end
-  end
-
-  def build_response(status, body)
-    StoreSearch::Response.new HTTPResponse.build(status, body)
-  end
 
   describe '#valid?' do
     context 'when attributes are ok' do
@@ -43,23 +34,23 @@ describe StoreSearch::App do
     context 'when app was found' do
       let(:results_hash) do
         {
-          "title" => "Spotify",
-          "description" => "Music player",
-          "publisher" => "Spotify Ltd.",
-          "developer" => "Spotify Ltd.",
-          "version" => "1.0.1",
-          "memory" => "28.5 MB",
-          "release_date" => "2014-05-14 15:54:22",
-          "min_os_version" => "2.2+",
-          "age_rating" => "Everyone",
-          "rating" => "4.4",
-          "categories" => ["Music & Audio"],
-          "icon_url" => "http://icon.url",
-          "screenshot_urls" => ["http://screen.com/1","http://screen.com/2","http://screen.com/3"]
+          :title => "Spotify",
+          :description => "Music player",
+          :publisher => "Spotify Ltd.",
+          :developer => "Spotify Ltd.",
+          :version => "1.0.1",
+          :memory => "28.5 MB",
+          :release_date => "2014-05-14 15:54:22",
+          :min_os_version => "2.2+",
+          :age_rating => "Everyone",
+          :rating => "4.4",
+          :categories => ["Music & Audio"],
+          :icon_url => "http://icon.url",
+          :screenshot_urls => ["http://screen.com/1","http://screen.com/2","http://screen.com/3"]
         }
       end
 
-      let(:response) { build_response 200, File.read(File.expand_path("../../fixtures/spotify.json", __FILE__)) }
+      let(:response) { results_hash }
       its(:fetch_basic_info!) { should be == results_hash }
 
       context 'app details' do
@@ -81,15 +72,19 @@ describe StoreSearch::App do
     end
 
     context 'when game was not found' do
-      let(:response) { build_response 404, '{}' }
-      its(:fetch_basic_info!) { should be_nil }
+      let(:response) { {} }
+
+      it 'should raise and error' do
+        expect { subject.fetch_basic_info! }.to raise_error(StoreSearch::RequestError)
+      end
     end
 
     context 'when there were issues along the way' do
-      let(:response) { build_response 500, 'Sorry, something went wrong.' }
+      let(:response) { {} }
+      subject { StoreSearch::App.new 123, 'ios' }
 
       it 'does raise an request exception' do
-        expect { subject.fetch_basic_info! }.to raise_error(StoreSearch::App::RequestError)
+        expect { subject.fetch_basic_info! }.to raise_error(StoreSearch::RequestError)
       end
     end
 
@@ -98,7 +93,7 @@ describe StoreSearch::App do
       subject { StoreSearch::App.new nil, 'windows_phone' }
 
       it 'does raise an attributes error' do
-        expect { subject.fetch_basic_info! }.to raise_error(StoreSearch::App::InvalidAttributesError)
+        expect { subject.fetch_basic_info! }.to raise_error(StoreSearch::InvalidAttributesError)
         expect(subject.errors).to be == ['missing app id', 'unknown platform_id']
       end
     end
