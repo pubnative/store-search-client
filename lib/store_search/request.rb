@@ -16,25 +16,15 @@ module StoreSearch
       @params = params
     end
 
-    # Public: Make an actual API calls.
+    # Public: Fetch details from plataform.
     #
-    # Examples
-    #
-    #   StoreSearch::Request.new('apps/ios', id: 'com.spotify').get # => <Response raw: '...', body: {}, .. />
-    #
-    # Returns wrapped and parsed StoreSearch::Response object.
+    # Returns details Hash.
     def get
-      make_request
-    end
-
-    private
-
-    # Private: Try to make an request, but also handle http errors as regular response.
-    def make_request
       search = PLATFORMS[platform_id][:search]
       search.fetch_app_details params[:id], params
     end
 
+    private
     # Fix for rack/utils issue: https://github.com/rack/rack/issues/557
     def stringify_numbers_deep!(hash)
       hash.each do |key, value|
