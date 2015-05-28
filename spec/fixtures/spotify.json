@@ -1,6 +1,4 @@
 {
-  "success": true,
-  "app": {
     "title":"Spotify",
     "description":"Music player",
     "publisher":"Spotify Ltd.",
@@ -15,4 +13,3 @@
     "icon_url":"http://icon.url",
     "screenshot_urls":["http://screen.com/1","http://screen.com/2","http://screen.com/3"]
   }
-}

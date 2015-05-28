@@ -2,9 +2,6 @@ module StoreSearch
   class App
     PLATFORM_IDS = %w[ios android]
 
-    RequestError           = Class.new(StandardError)
-    InvalidAttributesError = Class.new(ArgumentError)
-
     APPLICATION_FIELDS = %w[
       title
       description
@@ -59,8 +56,7 @@ module StoreSearch
     def fetch_basic_info!(country_code: 'US', language_code: 'en', fallback_country_codes: [])
       raise InvalidAttributesError, errors.join(', ') unless valid?
 
-      response = Request.new(
-        "apps/#{ platform_id }",
+      response = Request.new(platform_id,
         {
           id: id,
           country_code:  country_code,
@@ -69,13 +65,10 @@ module StoreSearch
         }
       ).get
 
-      case response.status
-      when 200
-        assign_attributes response.body['app']
-      when 404
-        nil
+      if !response.empty?
+        assign_attributes response
       else
-        raise RequestError, response.error
+        raise RequestError
       end
     end
 
@@ -101,7 +94,7 @@ module StoreSearch
 
     def assign_attributes(hash)
       APPLICATION_FIELDS.each do |field|
-        send "#{field}=", hash[field]
+        send "#{field}=", hash[field.to_sym]
       end
 
       hash
