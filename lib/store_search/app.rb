@@ -28,7 +28,6 @@ module StoreSearch
     def initialize(id, platform_id)
       @id          = id
       @platform_id = platform_id
-      @errors      = []
     end
 
     # Public: Makes an API call to grab the application details from app store, if the app is valid.
@@ -53,8 +52,11 @@ module StoreSearch
     # Returns a hash with app details if app was found, nil otherwise.
     # Raises StoreSearch::App::InvalidAttributesError if application is invalid.
     # Raises StoreSearch::App::RequestError if request failed.
-    def fetch_basic_info!(country_code: 'US', language_code: 'en', fallback_country_codes: [])
+    def fetch_basic_info!(country_code: nil, language_code: nil, fallback_country_codes: nil)
       raise InvalidAttributesError, errors.join(', ') unless valid?
+      country_code ||= 'US'
+      language_code ||= 'en'
+      fallback_country_codes ||= []
 
       response = Request.new(platform_id,
         {
