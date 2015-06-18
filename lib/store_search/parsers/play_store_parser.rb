@@ -27,7 +27,7 @@ module StoreSearch
     end
 
     def memory
-      params.size
+      params.size || 'N/A'
     end
 
     def release_date
