@@ -76,11 +76,7 @@ module StoreSearch
     # Raises Search::InvalidCountryError on invalid ISO country code.
     # Raises Search::MalformedResponseError on strange itunes response.
     def lookup!(options = {})
-      begin
-        response = get_json uri_with_query(options)
-      rescue => e
-        raise RequestError, "Exception was thrown in the request \"#{ e }\""
-      end
+      response = get_json uri_with_query(options)
 
       validate_response_errors!      response, options[:country]
       validate_response_format!      response
@@ -110,10 +106,17 @@ module StoreSearch
     end
 
     def get_json(url)
-      try_multiple_times_with_timeout TRIES, TIMEOUTS do
-        response = Net::HTTP.get_response url
+      response = try_multiple_times_with_timeout TRIES, TIMEOUTS do
+        Net::HTTP.get_response url
+      end
+      return JSON.parse(response.body) if response.kind_of?(Net::HTTPOK) && !response.body.nil?
 
-        JSON.parse response.body
+      error_msg = "URL: #{url} - RESPONSE: #{response.inspect}"
+      case response
+      when Net::HTTPOK;             raise HTTPEmptyBodyError.new(error_msg) if response.body.blank?
+      when Net::HTTPUnauthorized;   raise HTTPUnauthorizedError.new(error_msg)
+      when Net::HTTPForbidden;      raise HTTPForbiddenError.new(error_msg)
+      else                          raise UnexpectedHTTPResponseError.new(error_msg)
       end
     end
 

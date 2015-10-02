@@ -122,7 +122,7 @@ RSpec.describe StoreSearch::AppStore do
     context 'when request have failed' do
       it 'should raise RequestError for invalid json' do
         stub_api_request! 'Shit Happens'
-        expect { make_request! }.to raise_error StoreSearch::RequestError, /Exception was thrown in the request.*/
+        expect { make_request! }.to raise_error JSON::ParserError
       end
 
       it 'should raise InvalidCountryError' do

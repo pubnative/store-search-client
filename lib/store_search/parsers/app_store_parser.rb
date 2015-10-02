@@ -45,7 +45,7 @@ module StoreSearch
     end
 
     def screenshot_urls
-      params['screenshotUrls'] | params['ipadScreenshotUrls']
+      params['screenshotUrls'] | (params['ipadScreenshotUrls'] || [])
     end
 
     def platforms
