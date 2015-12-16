@@ -43,7 +43,12 @@ module StoreSearch
     private
 
     def find_image_url(image_urls)
-      image_urls.compact.reject(&:empty?).first
+      url = image_urls.compact.reject(&:empty?).first
+      if url.start_with?('//')
+        'http:' + url
+      else
+        url
+      end
     end
 
     def number_to_human_size number
