@@ -6,7 +6,7 @@ RSpec.describe StoreSearch::PlayStoreParser do
       title: 'some title',
       description: '<html> <h1>&bdquo;&#9733; some<br>more <br/>description<p>and</p> other<br />stuff &#9733;&ldquo;</h1> hidden<div style="display: none;">text </html>',
       banner_image_url: 'http://banner.image',
-      banner_icon_url:  'http://banner.icon',
+      banner_icon_url:  '//banner.icon',
       developer: ' Spotify Ltd. ',
       current_version: 'Varies on device',
       size: 'Varies on device',
