@@ -44,7 +44,7 @@ module StoreSearch
 
     def find_image_url(image_urls)
       url = image_urls.compact.reject(&:empty?).first
-      if url.start_with?('//')
+      if url && url.start_with?('//')
         'http:' + url
       else
         url
