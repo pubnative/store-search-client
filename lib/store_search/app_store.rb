@@ -11,8 +11,7 @@ module StoreSearch
     AVAILABLE_LOOKUP_PARAMS = %i[id country lang]
     AVAILABLE_ATTRIBUTES    = %i[language_code country_code fallback_country_codes]
 
-    TRIES    = 3
-    TIMEOUTS = 5
+    TIMEOUTS = 20
 
     attr_accessor *AVAILABLE_ATTRIBUTES, :country_codes
 
@@ -105,13 +104,16 @@ module StoreSearch
       end
     end
 
-    def get_json(url)
-      response = try_multiple_times_with_timeout TRIES, TIMEOUTS do
-        Net::HTTP.get_response url
+    def get_json(uri)
+      req = Net::HTTP::Get.new(uri.request_uri)
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+        http.read_timeout = TIMEOUTS
+        http.request(req)
       end
+
       return JSON.parse(response.body) if response.kind_of?(Net::HTTPOK) && !response.body.nil?
 
-      error_msg = "URL: #{url} - RESPONSE: #{response.inspect}"
+      error_msg = "URL: #{uri} - RESPONSE: #{response.inspect}"
       case response
       when Net::HTTPOK;             raise HTTPEmptyBodyError.new(error_msg) if response.body.blank?
       when Net::HTTPUnauthorized;   raise HTTPUnauthorizedError.new(error_msg)
@@ -141,31 +143,5 @@ module StoreSearch
       raise NoResultsError, 'Response is valid, but the application was not found' if response['resultCount'].zero?
     end
 
-    def wait_before_next_try
-      sleep 1
-    end
-
-    def try_multiple_times(tries)
-      tries.times do |c|
-        begin
-          return yield
-        rescue
-          if c < tries - 1
-            wait_before_next_try
-            next
-          else
-            raise
-          end
-        end
-      end
-    end
-
-    def try_multiple_times_with_timeout(tries, timeout)
-      try_multiple_times tries do
-        Timeout.timeout timeout do
-          yield
-        end
-      end
-    end
   end
 end

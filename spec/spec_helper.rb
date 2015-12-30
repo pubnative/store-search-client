@@ -1,6 +1,7 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'webmock/rspec'
+require 'rspec/its'
 require_relative '../lib/store_search'
 
 RSpec.configure do |config|
