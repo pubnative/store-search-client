@@ -51,7 +51,7 @@ module StoreSearch
     end
 
     def icon_url
-      find_image_url [params.banner_icon_url, params.banner_image_url]
+      find_image_url [params.cover_image_url]
     end
 
     def screenshot_urls

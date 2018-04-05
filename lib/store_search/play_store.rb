@@ -7,7 +7,7 @@ module StoreSearch
         begin
           language_code = params[:language_code].nil? ? 'en' : params[:language_code]
 
-          app = MarketBot::Android::App.new app_store_id, language: language_code
+          app = MarketBot::Play::App.new app_store_id, language: language_code
           app.update
 
           PlayStoreParser.parse(app)
