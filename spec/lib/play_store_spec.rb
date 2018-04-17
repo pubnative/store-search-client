@@ -2,7 +2,7 @@ require 'spec_helper'
 
 RSpec.describe StoreSearch::PlayStore do
   let(:bot) do
-    double MarketBot::Android::App,
+    double MarketBot::Play::App,
       title: 'some title',
       description: 'Description',
       banner_icon_url: 'http://banner.icon',
@@ -23,7 +23,7 @@ RSpec.describe StoreSearch::PlayStore do
   context 'when having app details' do
     before do
       expect(bot).to receive(:update)
-      expect(MarketBot::Android::App).to receive(:new).and_return(bot)
+      expect(MarketBot::Play::App).to receive(:new).and_return(bot)
     end
 
     subject { OpenStruct.new StoreSearch::PlayStore.fetch_app_details('id') }
@@ -38,7 +38,7 @@ RSpec.describe StoreSearch::PlayStore do
 
     it 'should raise NoResultsError' do
       expect(bot).to receive(:update).and_raise StoreSearch::NoResultsError
-      expect(MarketBot::Android::App).to receive(:new).and_return(bot)
+      expect(MarketBot::Play::App).to receive(:new).and_return(bot)
       expect{ subject.fetch_app_details('id') }.to raise_error StoreSearch::NoResultsError
     end
   end

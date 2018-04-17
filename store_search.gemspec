@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rack"
   spec.add_dependency "addressable"
   spec.add_dependency "htmlentities"
-  spec.add_dependency "market_bot"
+  spec.add_dependency "market_bot", ">= 1.3"
   spec.add_dependency "sanitize"
 
   spec.add_development_dependency "rake"
