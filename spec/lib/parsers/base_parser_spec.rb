@@ -20,7 +20,8 @@ RSpec.describe StoreSearch::BaseParser do
       platforms: nil,
       supported_devices: nil,
       total_ratings: nil,
-      installs: nil
+      installs: nil,
+      developer_website: nil
     }
   end
 

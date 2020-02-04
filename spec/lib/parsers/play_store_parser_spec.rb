@@ -5,8 +5,6 @@ RSpec.describe StoreSearch::PlayStoreParser do
     OpenStruct.new({
       title: 'some title',
       description: '<html> <h1>&bdquo;&#9733; some<br>more <br/>description<p>and</p> other<br />stuff &#9733;&ldquo;</h1> hidden<div style="display: none;">text </html>',
-      banner_image_url: 'http://banner.image',
-      banner_icon_url:  '//banner.icon',
       developer: ' Spotify Ltd. ',
       current_version: 'Varies on device',
       size: 'Varies on device',
@@ -17,7 +15,9 @@ RSpec.describe StoreSearch::PlayStoreParser do
       category: "Music & Audio",
       screenshot_urls: %w[http://img.com/1 http://img.com/2],
       votes: "1500",
-      installs: "10,000 - 20,000"
+      installs: "10,000 - 20,000",
+      website_url: 'https://www.spotify.com/',
+      cover_image_url: 'http://banner.icon'
     })
   end
 
@@ -39,7 +39,8 @@ RSpec.describe StoreSearch::PlayStoreParser do
       platforms: %w[Android],
       supported_devices: [],
       total_ratings: "1500",
-      installs: "10,000 - 20,000"
+      installs: "10,000 - 20,000",
+      developer_website: 'https://www.spotify.com/'
     }
   end
 
@@ -61,24 +62,10 @@ RSpec.describe StoreSearch::PlayStoreParser do
   its(:supported_devices) { should be == [] }
   its(:total_ratings) { should be == "1500" }
   its(:installs) { should be == "10,000 - 20,000" }
+  its(:developer_website) { should be == 'https://www.spotify.com/' }
+  its(:icon_url) { should be == 'http://banner.icon' }
 
   its(:to_hash) { should be == results_hash }
-
-  describe '#icon_url' do
-    context "when there's icon and image urls" do
-      its(:icon_url) { should be == 'http://banner.icon' }
-    end
-
-    context "when there's icon url but no image url" do
-      before { bot.banner_image_url = '' }
-      its(:icon_url) { should be == 'http://banner.icon' }
-    end
-
-    context "when there's no icon url but there's image url" do
-      before { bot.banner_icon_url = '' }
-      its(:icon_url) { should be == 'http://banner.image' }
-    end
-  end
 
   describe '.parse' do
     subject { StoreSearch::PlayStoreParser.parse(bot) }

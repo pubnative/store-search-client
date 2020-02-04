@@ -63,5 +63,9 @@ module StoreSearch
     def installs
       ''
     end
+
+    def developer_website
+      params['sellerUrl']
+    end
   end
 end
