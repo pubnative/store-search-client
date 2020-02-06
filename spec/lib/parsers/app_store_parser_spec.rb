@@ -40,7 +40,8 @@ RSpec.describe StoreSearch::AppStoreParser do
       platforms: %w[iosUniversal],
       supported_devices: %w[iPhone5s iPodTouchourthGen iPadThirdGen4G iPadFourthGen4G iPhone-3GS iPad2Wifi iPodTouchFifthGen iPadThirdGen iPhone5c iPhone5 iPad23G iPhone4 iPadMini4G iPadMini iPhone4S iPadFourthGen],
       total_ratings: 306794,
-      installs: ""
+      installs: "",
+      developer_website: 'http://www.spotify.com/'
     }
   end
 
@@ -62,6 +63,7 @@ RSpec.describe StoreSearch::AppStoreParser do
   its(:supported_devices) { should match_array(%w[iPhone5s iPodTouchourthGen iPadThirdGen4G iPadFourthGen4G iPhone-3GS iPad2Wifi iPodTouchFifthGen iPadThirdGen iPhone5c iPhone5 iPad23G iPhone4 iPadMini4G iPadMini iPhone4S iPadFourthGen]) }
   its(:total_ratings) { should be == 306794 }
   its(:installs) { should be == "" }
+  its(:developer_website) { should be == 'http://www.spotify.com/' }
 
   its(:to_hash) { should be == results_hash }
 

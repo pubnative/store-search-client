@@ -28,6 +28,7 @@ module StoreSearch
       supported_devices
       total_ratings
       installs
+      developer_website
     ]
 
     APPLICATION_FIELDS.each do |field|

@@ -20,6 +20,7 @@ module StoreSearch
       supported_devices
       total_ratings
       installs
+      developer_website
     ]
 
     attr_accessor :id, :platform_id, :errors

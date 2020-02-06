@@ -17,7 +17,9 @@ RSpec.describe StoreSearch::PlayStore do
       category: "Music & Audio",
       screenshot_urls: %w[http://img.com/1 http://img.com/2],
       votes: "55,000",
-      installs: "5,000 - 10,000"
+      installs: "5,000 - 10,000",
+      cover_image_url: 'http://banner.icon',
+      website_url: 'http://www.spotify.com/'
   end
 
   context 'when having app details' do
@@ -31,6 +33,7 @@ RSpec.describe StoreSearch::PlayStore do
     its(:title) { should be == 'some title' }
     its(:description) { should be == 'Description' }
     its(:icon_url) { should be == 'http://banner.icon' }
+    its(:developer_website) { should be == 'http://www.spotify.com/' }
   end
 
   context "when there's no app details" do

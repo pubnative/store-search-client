@@ -73,5 +73,9 @@ module StoreSearch
     def installs
       params.installs
     end
+
+    def developer_website
+      params.website_url
+    end
   end
 end
