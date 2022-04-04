@@ -11,7 +11,9 @@ module StoreSearch
       description = params.description.gsub(/<\s*br\s*\/?\s*>/, "\n")       # replace <br/> with \n
       description = description.gsub(/(?=<\s*p\s*>)/, "\n")                 # add \n before <p>
       description = description.gsub(/(display\s*:\s*none.*?>)(.*)/m, '\1') # remove text after style="display:none">
-      HTMLEntities.new.decode Sanitize.fragment(description, Sanitize::Config::RESTRICTED).strip
+      HTMLEntities.new.decode Sanitize.fragment(description, Sanitize::Config.merge(Sanitize::Config::RESTRICTED,
+        parser_options: { max_errors: -1, max_tree_depth: -1 }
+      )).strip
     end
 
     def publisher
